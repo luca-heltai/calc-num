@@ -2,7 +2,7 @@
 
 [Calcolo Numerico - Laurea Triennale in Ingegneria dell'Energia - Esercitazioni di Laboratorio](https://luca-heltai.github.io/ingencn/)
 
-[![deploy-book](https://github.com/luca-heltai/calc-num/actions/workflows/deploy.yaml/badge.svg)](https://github.com/Cirdans-Home/ingencn/actions/workflows/deploy.yaml)
+[![deploy-book](https://github.com/luca-heltai/calc-num/actions/workflows/deploy.yaml/badge.svg)](https://github.com/luca-heltai/calc-num/actions/workflows/deploy.yaml)
 
 ## L'ambiente jupyter-book
 
