@@ -1,10 +1,12 @@
+JUPYTER_BOOK ?= $(shell [ -x ./jupyterbook/bin/jupyter-book ] && echo ./jupyterbook/bin/jupyter-book || echo jupyter-book)
+
 build:
-	jupyter-book build src/
+	$(JUPYTER_BOOK) build src/
 publish:
 	ghp-import -n -p -f src/_build/html
 show: build
 	(cd src/_build/html/ && open index.html &)
 latex:
-	jupyter-book build src/ --builder pdflatex
+	$(JUPYTER_BOOK) build src/ --builder pdflatex
 clean:
-	jupyter-book clean src/
+	$(JUPYTER_BOOK) clean src/
