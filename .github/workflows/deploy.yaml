@@ -8,6 +8,9 @@ on:
       - main
       - AY_2023_2024
 
+permissions:
+  contents: write
+
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
