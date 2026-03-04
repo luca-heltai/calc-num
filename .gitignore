@@ -5,3 +5,4 @@ jupyterbook
 *.aux
 *.synctex.gz
 *.log
+_build/
