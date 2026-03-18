@@ -392,6 +392,73 @@ Confronto del grafico del polinomio {eq}`eq-polinomio` calcolato nella forma {eq
 e a partire dalla forma  $p(x) = (x-1)^7$.
 ```
 
+:::{admonition} Esercizio
+
+In questo esercizio analizziamo il comportamento dell'errore di approssimazione della derivata di una funzione
+al variare dell'intervallo di passo quando si approssimano le derivate utilizzando il metodo delle
+differenze finite.
+
+Scrivi un programma per calcolare l'approssimazione della differenza finita
+(`FD`) della derivata di una funzione `f`, calcolata al punto `x`, utilizzando
+un passo di dimensione `h`. Ricorda la definizione di derivata approssimata:
+
+$$
+fd(f,x,h) := \frac{f(x+h)-f(x)}{h}
+$$
+
+Applica questo metodo alla funzione `cos`, calcolane la derivata approssimata in
+`1`, e confronta il tuo risultato con la soluzione esatta `-sin(1)`. Ripeti il
+procedimento per `h` in $2^{-i}$ con $i$ che varia tra 1 e 60, e salva l'errore
+in un vettore.
+
+Plotta il risultato (in scala logaritmica), e commenta quello che osservi.
+Dovresti ottenere qualcosa di simile a
+
+![Errore differenze finite in funzione di `h`](/images/fd-error.png)
+
+**Nota**: se si vuole passare una funzione come argomento ad un altra funzione,
+si possono usare le `function handle`, ovvero il simbolo `@`. Consideriamo per
+esempio la seguente funzione, che si aspetta di poter chiamare il suo primo
+argomento come se fosse una funzione:
+la scrittura `f = @(x) x^2` è equivalente a definire una funzione
+
+```matlab
+function res = f(x)
+res = x^2
+end
+```
+
+ovvero:
+
+```matlab
+f = @(x) x^2
+
+f =
+
+  function_handle with value:
+
+    @(x)x^2
+ 
+>> f(2)
+
+ans =
+
+     4
+```
+
+:::
+
+:::{margin} Grafici
+Per disegnare un grafico con Matlab, si utilizza la funzione `plot`.
+
+La funzione `plot` prende come argomenti le coordinate `x` e `y` dei punti da tracciare sul grafico. Ad esempio, per disegnare un grafico di una funzione lineare, si possono fornire due vettori di coordinate `x` e `y`, dove `x` rappresenta i valori sull'asse `x` e `y` rappresenta i valori sull'asse `y` corrispondenti.
+
+Per fare il grafico degli errori, è spesso utile farlo in scala logaritmica o
+semilogaritmica. Ciò si ottiene con i comandi `semilogx`, `semilogy`, `loglog`,
+che funzionano in modo simile al comando plot.
+
+:::
+
 ## Precisione mista
 
 La rivoluzione delle applicazioni di "apprendimento automatico" (*machine learning*) e dell'intelligenza artificiale (*AI*) ha suscitato negli ultimi anni un interesse per lo sviluppo di aritmetica a **mezza precisione** (formato in virgola mobile a 16 bit) che potesse rispondere al problema della necessità di

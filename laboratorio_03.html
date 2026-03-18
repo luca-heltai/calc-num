@@ -779,6 +779,60 @@ provate a fare un <em>plot</em> sullo stesso intervallo e confrontiamolo con il 
 e a partire dalla forma  <span class="math notranslate nohighlight">\(p(x) = (x-1)^7\)</span>.</span><a class="headerlink" href="#buonpolinomio" title="Link a questa immagine">#</a></p>
 </figcaption>
 </figure>
+<div class="admonition-esercizio admonition">
+<p class="admonition-title">Esercizio</p>
+<p>In questo esercizio analizziamo il comportamento dell’errore di approssimazione della derivata di una funzione
+al variare dell’intervallo di passo quando si approssimano le derivate utilizzando il metodo delle
+differenze finite.</p>
+<p>Scrivi un programma per calcolare l’approssimazione della differenza finita
+(<code class="docutils literal notranslate"><span class="pre">FD</span></code>) della derivata di una funzione <code class="docutils literal notranslate"><span class="pre">f</span></code>, calcolata al punto <code class="docutils literal notranslate"><span class="pre">x</span></code>, utilizzando
+un passo di dimensione <code class="docutils literal notranslate"><span class="pre">h</span></code>. Ricorda la definizione di derivata approssimata:</p>
+<div class="math notranslate nohighlight">
+\[
+fd(f,x,h) := \frac{f(x+h)-f(x)}{h}
+\]</div>
+<p>Applica questo metodo alla funzione <code class="docutils literal notranslate"><span class="pre">cos</span></code>, calcolane la derivata approssimata in
+<code class="docutils literal notranslate"><span class="pre">1</span></code>, e confronta il tuo risultato con la soluzione esatta <code class="docutils literal notranslate"><span class="pre">-sin(1)</span></code>. Ripeti il
+procedimento per <code class="docutils literal notranslate"><span class="pre">h</span></code> in <span class="math notranslate nohighlight">\(2^{-i}\)</span> con <span class="math notranslate nohighlight">\(i\)</span> che varia tra 1 e 60, e salva l’errore
+in un vettore.</p>
+<p>Plotta il risultato (in scala logaritmica), e commenta quello che osservi.
+Dovresti ottenere qualcosa di simile a</p>
+<p><img alt="Errore differenze finite in funzione di " src="_images/fd-error.png" /></p>
+<p><strong>Nota</strong>: se si vuole passare una funzione come argomento ad un altra funzione,
+si possono usare le <code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">handle</span></code>, ovvero il simbolo <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>. Consideriamo per
+esempio la seguente funzione, che si aspetta di poter chiamare il suo primo
+argomento come se fosse una funzione:
+la scrittura <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">=</span> <span class="pre">&#64;(x)</span> <span class="pre">x^2</span></code> è equivalente a definire una funzione</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>res<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span>x<span class="p">)</span><span class="w"></span>
+<span class="n">res</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">x</span>^<span class="mi">2</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</pre></div>
+</div>
+<p>ovvero:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span>^<span class="mi">2</span><span class="w"></span>
+
+<span class="n">f</span><span class="w"> </span><span class="p">=</span><span class="w"></span>
+
+<span class="w">  </span><span class="nb">function_handle</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">value</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">x</span>^<span class="mi">2</span><span class="w"></span>
+<span class="w"> </span>
+<span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+
+<span class="nb">ans</span><span class="w"> </span><span class="p">=</span><span class="w"></span>
+
+<span class="w">     </span><span class="mi">4</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title">Grafici</p>
+<p>Per disegnare un grafico con Matlab, si utilizza la funzione <code class="docutils literal notranslate"><span class="pre">plot</span></code>.</p>
+<p>La funzione <code class="docutils literal notranslate"><span class="pre">plot</span></code> prende come argomenti le coordinate <code class="docutils literal notranslate"><span class="pre">x</span></code> e <code class="docutils literal notranslate"><span class="pre">y</span></code> dei punti da tracciare sul grafico. Ad esempio, per disegnare un grafico di una funzione lineare, si possono fornire due vettori di coordinate <code class="docutils literal notranslate"><span class="pre">x</span></code> e <code class="docutils literal notranslate"><span class="pre">y</span></code>, dove <code class="docutils literal notranslate"><span class="pre">x</span></code> rappresenta i valori sull’asse <code class="docutils literal notranslate"><span class="pre">x</span></code> e <code class="docutils literal notranslate"><span class="pre">y</span></code> rappresenta i valori sull’asse <code class="docutils literal notranslate"><span class="pre">y</span></code> corrispondenti.</p>
+<p>Per fare il grafico degli errori, è spesso utile farlo in scala logaritmica o
+semilogaritmica. Ciò si ottiene con i comandi <code class="docutils literal notranslate"><span class="pre">semilogx</span></code>, <code class="docutils literal notranslate"><span class="pre">semilogy</span></code>, <code class="docutils literal notranslate"><span class="pre">loglog</span></code>,
+che funzionano in modo simile al comando plot.</p>
+</aside>
 </section>
 <section id="precisione-mista">
 <h2>Precisione mista<a class="headerlink" href="#precisione-mista" title="Link a questa intestazione">#</a></h2>
