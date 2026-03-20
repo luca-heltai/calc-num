@@ -1,4 +1,4 @@
-# Laboratorio 7a : Soluzione di sistemi lineari triangolari e fattorizzazione LU
+# Laboratorio 4: Sistemi lineari triangolari e fattorizzazione LU
 
 
 In questo laboratorio ci focalizzeremo sul problema di risolvere
@@ -226,6 +226,7 @@ vediamo che la predizione quadratica è piuttosto efficace.
 Tempo di calcolo come un $O(n^2)$ della dimensione.
 ```
 
+ <!---
 ## Esercizi
 
 :::{admonition} Esercizio 3: Numeri di Bernoulli
@@ -303,6 +304,8 @@ confrontare i risultati ottenuti con la funzione nativa di MATLAB che calcola
 i numeri di Bernoulli dal medesimo nome (`help bernoulli` per le informazioni).
 ```
 :::
+ -->
+
 
  <!---
 (condizionamento-spettrale)=
@@ -462,7 +465,7 @@ per ottenere questa approssimazione si trovano in {cite:p}`MR740850` e {cite:p}`
 -->
 
 
-# Il Metodo di Eliminazione di Gauss e la Fattorizzazione LU
+# Il metodo di eliminazione di Gauss e la fattorizzazione LU
 
 
 Il metodo di **eliminazione di Gauss** (Carl Friedrich Gauss, 1777-1855), noto anche come
@@ -762,8 +765,10 @@ Qual è l'effetto della traslazione di indice?
 
 ::::
 
+<!---
 Possiamo **verificare** l'implementazione della versione con *pivoting parziale*
 facendone un paragone con la versione dell'esercizio precedente.
+
 
 Confrontiamo gli errori assoluti e relativi,
 ```{math}
@@ -823,6 +828,7 @@ Errori assoluti e relativi tra una matrice $A$ ad entrate casuali
 uniformemente distribuite in $[0,1]$ e la relativa fattorizzazione $LU$
 calcolata **senza** e **con** pivoting.
 ```
+ -->
 
 ### Calcolo del determinante
 
