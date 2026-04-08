@@ -1,4 +1,4 @@
-# Laboratorio 6 : Metodi di Quadratura
+# Laboratorio 9 : Metodi di Quadratura
 
 Compito dell'integrazione numerica, o *quadratura* è quello di
 approssimare il valore dell'integrale
