@@ -548,14 +548,15 @@ Tutte le volte che volete risolvere un problema agli autovalori con matrice $M^{
 <p>dove <span class="math notranslate nohighlight">\(\varepsilon\)</span> è una tolleranza prefissata.</p>
 <div class="admonition-esercizio admonition">
 <p class="admonition-title">Esercizio</p>
-<p>Si scriva una <em>function</em> che implementi il metodo di Jacobi per la soluzione di un sistema lineare <span class="math notranslate nohighlight">\(A \mathbf{x} = \mathbf{y}\)</span> entro una tolleranza <span class="math notranslate nohighlight">\(\varepsilon\)</span> sfruttando il seguente prototipo:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[x,res,it]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">jacobi</span><span class="p">(</span>A,b,x,itmax,eps<span class="p">)</span><span class="w"></span>
+<p>Si scriva una <em>function</em> che implementi il metodo di Jacobi per la soluzione di un sistema lineare <span class="math notranslate nohighlight">\(A \mathbf{x} = \mathbf{b}\)</span> entro una tolleranza <span class="math notranslate nohighlight">\(\varepsilon\)</span> sfruttando il seguente prototipo:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[x,res,it]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">jacobi</span><span class="p">(</span>A,b,x,itmax,ep<span class="p">)</span><span class="w"></span>
 <span class="c">%%JACOBI implementa il metodo di Jacobi per la soluzione del sistema A x = b</span><span class="w"></span>
 <span class="c">%    INPUT:</span><span class="w"></span>
 <span class="c">%     A matrice quadrata</span><span class="w"></span>
 <span class="c">%     b termine destro del sistema lineare da risolvere</span><span class="w"></span>
 <span class="c">%     x innesco della strategia iterativa</span><span class="w"></span>
 <span class="c">%     itmax massimo numero di iterazioni lineari consentito</span><span class="w"></span>
+<span class="c">%     ep tolleranza epsilon per il criterio di arresto</span><span class="w"></span>
 <span class="c">%    OUTPUT</span><span class="w"></span>
 <span class="c">%     x ultima soluzione calcolata dal metodo</span><span class="w"></span>
 <span class="c">%     res vettore dei residui</span><span class="w"></span>
@@ -596,8 +597,8 @@ per questo metodo la decomposizione additiva della matrice <span class="math not
 <p>Possiamo sfruttare di nuovo il <em>residuo relativo</em> per definire il criterio d’arresto.</p>
 <div class="admonition-esercizio admonition">
 <p class="admonition-title">Esercizio</p>
-<p>Si scriva una <em>function</em> che implementi il metodo di Gauss-Seidel in avanti per la soluzione di un sistema lineare <span class="math notranslate nohighlight">\(A \mathbf{x} = \mathbf{y}\)</span> entro una tolleranza <span class="math notranslate nohighlight">\(\varepsilon\)</span> sfruttando il seguente prototipo:</p>
-<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[x,res,it]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">forwardgs</span><span class="p">(</span>A,b,x,itmax,eps<span class="p">)</span><span class="w"></span>
+<p>Si scriva una <em>function</em> che implementi il metodo di Gauss-Seidel in avanti per la soluzione di un sistema lineare <span class="math notranslate nohighlight">\(A \mathbf{x} = \mathbf{b}\)</span> entro una tolleranza <span class="math notranslate nohighlight">\(\varepsilon\)</span> sfruttando il seguente prototipo:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[x,res,it]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">forwardgs</span><span class="p">(</span>A,b,x,itmax,ep<span class="p">)</span><span class="w"></span>
 <span class="c">%%FORWARDGS implementa il metodo di Gauss-Seidel in avanti per la soluzione del</span><span class="w"></span>
 <span class="c">% sistema A x = b</span><span class="w"></span>
 <span class="c">%    INPUT:</span><span class="w"></span>
@@ -605,6 +606,7 @@ per questo metodo la decomposizione additiva della matrice <span class="math not
 <span class="c">%     b termine destro del sistema lineare da risolvere</span><span class="w"></span>
 <span class="c">%     x innesco della strategia iterativa</span><span class="w"></span>
 <span class="c">%     itmax massimo numero di iterazioni lineari consentito</span><span class="w"></span>
+<span class="c">%     ep tolleranza epsilon per il criterio di arresto</span><span class="w"></span>
 <span class="c">%    OUTPUT</span><span class="w"></span>
 <span class="c">%     x ultima soluzione calcolata dal metodo</span><span class="w"></span>
 <span class="c">%     res vettore dei residui</span><span class="w"></span>

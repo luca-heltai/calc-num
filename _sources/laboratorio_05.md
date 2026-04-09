@@ -167,15 +167,16 @@ ovvero, rispettivamente
 dove $\varepsilon$ è una tolleranza prefissata.
 
 :::{admonition} Esercizio
-Si scriva una *function* che implementi il metodo di Jacobi per la soluzione di un sistema lineare $A \mathbf{x} = \mathbf{y}$ entro una tolleranza $\varepsilon$ sfruttando il seguente prototipo:
+Si scriva una *function* che implementi il metodo di Jacobi per la soluzione di un sistema lineare $A \mathbf{x} = \mathbf{b}$ entro una tolleranza $\varepsilon$ sfruttando il seguente prototipo:
 ```matlab
-function [x,res,it] = jacobi(A,b,x,itmax,eps)
+function [x,res,it] = jacobi(A,b,x,itmax,ep)
 %%JACOBI implementa il metodo di Jacobi per la soluzione del sistema A x = b
 %    INPUT:
 %     A matrice quadrata
 %     b termine destro del sistema lineare da risolvere
 %     x innesco della strategia iterativa
 %     itmax massimo numero di iterazioni lineari consentito
+%     ep tolleranza epsilon per il criterio di arresto
 %    OUTPUT
 %     x ultima soluzione calcolata dal metodo
 %     res vettore dei residui
@@ -214,9 +215,9 @@ Una condizione sufficiente (ma **non necessaria**) affinché il metodo di Gauss-
 Possiamo sfruttare di nuovo il *residuo relativo* per definire il criterio d'arresto.
 
 :::{admonition} Esercizio
-Si scriva una *function* che implementi il metodo di Gauss-Seidel in avanti per la soluzione di un sistema lineare $A \mathbf{x} = \mathbf{y}$ entro una tolleranza $\varepsilon$ sfruttando il seguente prototipo:
+Si scriva una *function* che implementi il metodo di Gauss-Seidel in avanti per la soluzione di un sistema lineare $A \mathbf{x} = \mathbf{b}$ entro una tolleranza $\varepsilon$ sfruttando il seguente prototipo:
 ```matlab
-function [x,res,it] = forwardgs(A,b,x,itmax,eps)
+function [x,res,it] = forwardgs(A,b,x,itmax,ep)
 %%FORWARDGS implementa il metodo di Gauss-Seidel in avanti per la soluzione del
 % sistema A x = b
 %    INPUT:
@@ -224,6 +225,7 @@ function [x,res,it] = forwardgs(A,b,x,itmax,eps)
 %     b termine destro del sistema lineare da risolvere
 %     x innesco della strategia iterativa
 %     itmax massimo numero di iterazioni lineari consentito
+%     ep tolleranza epsilon per il criterio di arresto
 %    OUTPUT
 %     x ultima soluzione calcolata dal metodo
 %     res vettore dei residui
