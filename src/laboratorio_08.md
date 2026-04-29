@@ -1,120 +1,225 @@
-# Laboratorio 8 : Il Problema Lineare dei Minimi Quadrati
+# Laboratorio 8: Metodi di Interpolazione
 
-Siamo interessati a risolvere sistemi lineari **sovradeterminati**, ossia della forma
-```{math}
-A \mathbf{x} = \mathbf{b}, \qquad A \in \mathbb{R}^{m \times n},\; \mathbf{x},\mathbf{b} \in \mathbb{R}^n,\;m> n.
-```
-Se il problema non ha soluzione si cercano i vettori $\mathbf{x}\in \mathbb{R}^{n}$ che soddisfano
-```{math}
-:label: leastsq
-\lVert A\mathbf{x}-\mathbf{b}\rVert_2 = \min_{\mathbf{y}\in\mathbb{R}^n}\lVert A\mathbf{y}-\mathbf{b}\rVert_2.
-```
-Tale problema viene detto **problema dei minimi quadrati**.
+In molti problemi si ha a che fare con una funzione $f:\mathbb{R}\rightarrow\mathbb{R}$ di forma non elementare, o addirittura sconosciuta, di cui si possiede solo una tabulazione in un insieme finito di punti, per esempio derivanti da misurazioni sperimentali. In questi casi la stima di un valore di $f$, in un punto diverso da quelli in cui è data, può essere fatta utilizzando i dati disponibili. Questa operazione si effettua sostituendo a $f$ una funzione che sia facilmente calcolabile come, per esempio, un polinomio.
 
-In questo laboratorio vogliamo concentrarci su metodi numerici di risoluzione del problema dei minimi quadrati e vedere un'applicazione al *fitting* di dati.
+Supponiamo siano dati $n+1$ punti reali $x_0,\ldots, x_n\in [a,b]\subset\mathbb{R}$, due a due distinti, in corrispondenza dei quali siano noti gli $n+1$ valori reali $f(x_0), \ldots, f(x_n)$. L'interpolazione polinomiale consiste nel determinare un polinomio $P_n$ di grado al più $n$ tale che
 
-La determinazione di un punto di minimo di $\Psi(\mathbf{x})=\lVert A\mathbf{x}-\mathbf{b}\rVert_2$ si riconduce alla ricerca dei punti che annullano tutte le derivate parziali prime di $\Psi$ e questo porta alle **equazioni normali**
 ```{math}
-:label: eqnorm
-A^{\top}A\mathbf{x}=A^{\top}\mathbf{b}.
-```
-Se la matrice $A$ ha rango massimo, allora la soluzione del problema dei minimi quadrati {eq}`leastsq` è unica e può essere ottenuta risolvendo il sistema {eq}`eqnorm`.
-
-In tal caso, si può utilizzare la fattorizzazione $LU$ della matrice $A^{\top}A$. Poiché la matrice $A^{\top}A$ è simmetrica definita positiva, puo essere fattorizzata come
-```{math}
-A^{\top} A = LL^{\top},
-```
-detta **fattorizzazione di Cholesky**, dove $L\in\mathbb{R}^n$ è una matrice triangolare inferiore con elementi principali positivi.
-La soluzione del sistema delle equazioni normali {eq}`eqnorm` viene calcolata risolvendo successivamente i due sistemi
-di ordine $n$ con matrice dei coefficienti triangolare
-```{math}
-\begin{align}
-    & L\mathbf{y} = A^{\top}\mathbf{b}\\[1ex]
-    & L^{\top}\mathbf{x} = \mathbf{y}.
-\end{align}
+:label: cinterp
+P_n(x_i)=f(x_i),\quad \forall i=0,1,\ldots,n.
 ```
 
-In alternativa, abbiamo discusso a lezione il metodo basato sulla fattorizzazione $QR$ della matrice $A$ per il calcolo della soluzione del problema dei minimi quadrati {eq}`leastsq`.
+Srivendo il polinomio $P_n$ nella base dei monomi $\{1,x,x^2,\ldots\}$ si ha
+
+```{math}
+P_n(x)=a_n x^n+a_{n-1} x^{n-1}+\ldots+a_1 x+a_0,
+```
+
+i cui coefficienti $\{a_i\}_{i=0}^n$ si possono ricavare risolvendo il sistema lineare di $n+1$ equazioni ottenuto imponendo che il polinomio verifichi le condizioni di interpolazione {eq}`cinterp`, ovvero chiedendo che $P_n(x_i) = y_i$ per $i=1,\ldots,n+1$, si ottiene:
+
+$$
+P_n(x_i) = \sum_{j=1}^{n+1} x_i^{(j-1)} a_j = f(x_i) = y_i\quad \Longrightarrow\quad V a = y
+$$
+
+Dove la matrice $V$
+
+$$
+V_{ij} = x_i^{(j-1)}, \qquad i,j = 1,\ldots,n+1
+$$
+
+ è nota come matrice di Vandermonde.
+
+ Dati i punti di interpolazione `x` e i valori `y`, i coefficienti del polinomio che interpola `y` nei punti `x` sono quindi dati da
+
+ $$
+ a = A^{-1} y,
+ $$
+
+che in matlab può essere calcolato con
+
+```matlab
+a = A\y
+```
 
 :::{admonition} Esercizio 1
-Si scriva una *function* che risolve il problema dei minimi quadrati sfruttando il seguente prototipo:
+Si implementi una *function* che, dati i punti di interpolazione come vettore riga `x` di dimensione $n+1$, costruisce la matrice di Vandermonde $V$ tale che `size(V) = (n+1,n+1)`.
+
+Si calcoli il suo numero di condizionamento sui punti di interpolazione `x = linspace(0,1,n+1)` al variare di `n`. Quando il numero di condizionamento supera `1/eps`?
+
+Si usi il seguente prototipo
+
 ```matlab
-function [x,min_res] = minquad(A,b,flag)
-%%MINQUAD risolve il problem ai minimi quadrati associato
-% al sistema Ax=b con il metodo specificato in flag
+function V = Vandermonde(x)
+%%VANDERMONDE costruisce la matrice di Vandermonde V
 %    INPUT:
-%     A matrice del sistema
-%     b termine noto del sistema
-%     flag stringa che specifica il metodo di risoluzione
-%    OUTPUT:
-%     x soluzione del problema ai minimi quadrati, punto di minimo
-%     min_res valore del minimo
+%          x vettore riga degli n+1 nodi di interpolazione
+%   OUTPUT:
+%          V matrice di Vandermonde
 end
 ```
-- `flag` è una stringa che può assumere il valore `'EqNormali'` oppure `'MetodoQR'` e determina il metodo numerico con cui il problema dei minimi quadrati viene risolto all'interno della *function*.
-- Si calcoli la fattorizzazione $LU$ di $A^{\top}A$ usando l'algoritmo di Doolittle visto nel Laboratorio 7a.
-- Si usi il comando MATLAB `qr` per calcolare la fattorizzazione $QR$ della matrice $A$.
-- Si usino le funzioni `backwardsolve` e `forwardsolve`, implementate nel Laboratorio 7b, per risolvere i sistemi lineari triangolari risultanti.
+
 :::
 
+Poiché la matrice di Vandermonde risulta una matrice malcondizionata non conviene risolvere il sistema lineare per determinare il polinomio di interpolazione. Si preferisce cambiare la base in cui rappresentiamo i polinomi, in modo che la matrice di interpolazione sia l'identità.
 
-Una tipica situazione in cui è necessario risolvere un problema dei minimi quadrati si presenta quando si vuole costruire una funzione che "si avvicini il più possibile" ad un insieme di dati.
+Per fare questo, costruiamo il polinomio di interpolazione di grado al più $n$ della forma
+
+```{math}
+P_n(x) = \sum_{j=0}^n f(x_j)\ell_j(x),\qquad \ell_j(x)=\prod_{i\neq j}\dfrac{x-x_i}{x_j-x_i}.
+```
 
 :::{admonition} Esercizio 2
+Si implementi una *function* che costruisce le funzioni polinomiali $\ell_j$ dato il vettore `x` di $n+1$ nodi di interpolazione e restituisce il suo valore nei punti specificati nel vettore `z`. Si segua il seguente prototipo
 
-Vogliamo trovare i coefficienti $a_1$ e $a_2$ della funzione $f(t) = t(a_1+a_2 e^{-t})$ in modo che $f$ approssi i dati $(t_i,f_i)$, $i=0,1,2,3,4$, di Tabella 1 nel senso dei minimi quadrati
+```matlab
+function L = LagrangePoly(x, z, j)
+%%LAGRANGEPOLY costruisce il j-esimo polinomio di Lagrange dati i nodi
+% di interpolazione x e lo valuta nei vettore z
+%    INPUT:
+%          x vettore riga degli n+1 nodi di interpolazione
+%          z vettore riga dei punti di valutazione del polinomio
+%          j indice the polinomio di Lagrange
+%   OUTPUT:
+%          L j-esimo polinomio di Lagrange valutato in z
+end
+```
+
+- Si inserisca un controllo sul valore di $j$ ammesso.
+
+Si usi la *function* `LagrangePoly` per costruire il polinomio di interpolazione di Lagrange $P_3$ dai punti di interpolazione di Tabella 1
+
 ```{math}
 \begin{aligned}
 &\text{Tabella 1}\\
 &\begin{array}{c|ccccc}
-t_i & 0.2 & 0.4 & 0.6 & 0.8 & 1.0\\
-\hline f_i & 2.3 & 3.0 & 2.9 & 2.0 & 1.1
+x_i & -5 & -4 & 0 & 5 \\
+\hline y_i & -1 & -1 & -16 & 0\\
 \end{array}
 \end{aligned}
 ```
-Per risolvere il problema del *fitting* di dati, si derivino la matrice $A$ ed il vettore $\mathbf{b}$ del problema dei minimi quadrati corrispondente. Si utilizzi la *function* `minquad` implementata nell'Esercizio 1 per risolvere il problema.
 
-Si completi il seguente programma usando i dati forniti
-```matlab
-% Soluzione del problema di fitting di dati
+Si implementi uno script di MATLAB che produce il grafico del polinomio di interpolazione $P_3$ nell'intervallo $[-5,5]$ con $m=100$ punti equidistanti. Si aggiungano alla stessa figura i punti di interpolazione.
 
-% Dati
-t = ...
-f = ...
-% Definizione della matrice e del termine noto del sistema
-A = ...
-b = ...
-
-% Soluzione usando le equazioni normali
-flag = 'EqNormali';
-[a,min_a] = minquad(A,b,flag);
-fprintf("Il minimo dato dalla soluzione del sistema delle equazioni normali e' %1.2e\n",...
-        min_a);
-% Soluzione usando il metodo QR
-flag = 'MetodoQR';
-[c,min_c] = minquad(A,b,flag);
-fprintf("Il minimo dato dal metodo QR e' %1.2e\n", min_c);
-
-% Plot dei dati
-plot(t,f,'sk','LineWidth',1)
-hold on;
-% Valutazione della funzione approssimante nei punti dati in tfine 
-tfine = 0:0.02:1;
-fa = ...
-fc = ...
-% Plot delle funzioni approssimanti sulla griglia tfine
-plot(tfine, fa, '-b'); hold on
-plot(tfine, fc, '--r','LineWidth',1);
-xlabel('t'); legend('Dati','Soluzione delle equazioni normali','Soluzione del metodo QR','Location','best')
-```
 Il grafico risultante è mostrato qui sotto.
-```{figure} ./images/datafitting.png
+
+```{figure} ./images/interp.png
 ---
 width: 90%
 ---
 ```
+
 :::
 
-Quando la funzione approssimante cercata è un polinomio esistono le seguenti routine di MATLAB:
-- `a = polyfit(xData,yData,m)` restituisce il vettore `a` di coefficienti del polinomio di grado $m$ che approssima i dati `(xData,yData)` nel senso dei minimi quadrati.
+Per trovare i coefficienti del polinomio interpolante nella base dei monomi esistono le seguenti routine di MATLAB:
+
+- `a = polyfit(xData,yData,m)` restituisce il vettore `a` di coefficienti del polinomio di grado $m$ che approssima i dati `(xData,yData)`.
 - `y = polyval(a,x)` valuta nel punto `x` il polinomio definito dai coefficienti `a`.
+
+::::{admonition} Esercizio 3
+Si consideri la **funzione di Runge**
+
+```{math}
+:label: runge
+f(x) = \dfrac{1}{1+x^2},\quad x\in[a,b].
+```
+
+Vogliamo studiare l'influenza della scelta dei nodi di interpolazione sulla qualità dell'interpolante polinomiale di grado $n$ per diversi valori di $n$.
+
+Si implementi uno script di MATLAB in cui:
+
+- Si calcolino i polinomi $\{P_n\}_n$ di Lagrange di grado $n=5,10,19$ che interpolano la funzione data in {eq}`runge` usando $n+1$ nodi equispaziati nell'intervallo $[−5, 5]$. Si riporti il grafico di ciascun polinomio interpolante su $m=500$ punti nell'intervallo considerato, insieme con quello della funzione data;
+- Si calcoli per ciascun valore di $n$ l'errore commesso ossia $E_n = \max_{-5\leq x \leq 5} |f(x) − P_n(x)|$ e si riportino gli errori ottenuti in un grafico in scala semilogaritmica;
+- Si utilizzi l'implementazione dell'interpolazione di Lagrange derivata nell'Esercizio 2.
+
+:::{admonition} Un suggerimento
+:class: tip, dropdown
+Si può seguire il seguente prototipo
+
+```matlab
+a = -5;
+b = 5;
+m = 500;
+z = ... % punti di valutazione
+f = ... % funzione di Runge definita come handle function
+d = [5,10,19];
+% Allocazione dei polinomi interpolanti e del vettore degli errori
+P = ...
+err = ...
+for k = 1:length(d)
+    ...
+    
+    x = ...  % Nodi di interpolazione
+    ...
+
+    % Calcolo del polinomio di Lagrange
+    ...
+    
+    % Calcolo dell'errore
+    ...
+end
+% Plot della funzione e dei polinomi interpolanti
+...
+legend('Exact','n = 5','n = 10','n = 19','Location','best');
+% Plot dell'errore
+...
+
+```
+
+:::
+::::
+
+Il fenomeno che si osserva nell'Esercizio 3 è la mancata convergenza della successione $\{P_n\}_n$ dei polinomi di interpolazione alla funzione di Runge {eq}`runge`.
+Tale fenomeno, detto anche **fenomeno di Runge**, può essere evitato utilizzando opportune distribuzioni di nodi.
+
+Nell'intervallo $[a,b]\subset\mathbb{R}$ si considerino i nodi $\{x_i\}_{i=0}^{n}$ dati da
+
+```{math}
+:label: cheb
+x_i = \dfrac{a+b}{2} + \dfrac{b-a}{2}\widehat{x}_i\quad\mbox{con}\;\widehat{x}_i = -\cos\left(\dfrac{\pi i}{n}\right),\quad i=0,\ldots,n.
+```
+
+I punti $\widehat{x}_i\in[−1, 1]$ sono detti **nodi di Chebyshev**.
+
+:::{admonition} Esercizio 4
+Si ripeta l'Esercizio 3 utilizzando come nodi di interpolazione i nodi di Chebyshev dati dalla {eq}`cheb`.
+
+I grafici dei polinomi interpolanti ottenuti con nodi di interpolazione equidistanti (grafico di sinistra) e con nodi di Chebyshev (grafico di destra) sono riportati qui sotto.
+
+```{figure} ./images/runge.png
+---
+width: 100%
+---
+```
+
+:::
+
+::::{admonition} Esercizio 5
+Si costruisca una funzione che valuta la funzione di Lebesgue $\Lambda(x)$ definita come
+
+$$
+\Lambda(x) := \sum_{i=1}^{n+1} |\ell_i(x)|.
+$$
+
+Si usi il seguente prototipo, insieme alla funzione costruita nell'esercizio 2:
+
+```matlab
+function L = Lebesgue(x, z)
+%%LEBESGUE costruisce la lebesgue function dati i nodi
+% di interpolazione x e lo valuta nei vettore z
+%    INPUT:
+%          x vettore riga degli n+1 nodi di interpolazione
+%          z vettore riga dei punti di valutazione della Lebesgue function
+%   OUTPUT:
+%          L la funzione di Lebesgue in z
+end
+```
+
+Si plotti la funzione di Lebesgue per $n=5,10,15$ su `m=500` punti nell'intervallo `-1,1`, utilizzando i punti di interpolazione equispaziati (caso 1), e i punti di interpolazione di Chebyshev (caso 2).
+
+Si costruisca un grafico in scala logaritmica che mostra il variare di $\max_{x} |\Lambda(x)|$ nell'intervallo considerato al variare di $n$ nei due casi.
+
+```{math}
+
+```
+
+::::
