@@ -175,7 +175,8 @@ Nell'intervallo $[a,b]\subset\mathbb{R}$ si considerino i nodi $\{x_i\}_{i=0}^{n
 
 ```{math}
 :label: cheb
-x_i = \dfrac{a+b}{2} + \dfrac{b-a}{2}\widehat{x}_i\quad\mbox{con}\;\widehat{x}_i = -\cos\left(\dfrac{\pi i}{n}\right),\quad i=0,\ldots,n.
+x_i = \dfrac{a+b}{2} + \dfrac{b-a}{2}\widehat{x}_i,\quad\mbox{con}\quad
+\widehat{x}_i = \cos\!\left(\dfrac{2i+1}{2(n+1)}\pi\right),\quad i=0,\ldots,n.
 ```
 
 I punti $\widehat{x}_i\in[−1, 1]$ sono detti **nodi di Chebyshev**.
