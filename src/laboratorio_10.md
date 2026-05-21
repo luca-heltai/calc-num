@@ -1,16 +1,19 @@
-# Laboratorio 11 : Metodi per la Soluzione di ODE
+# Laboratorio 10 : Metodi per la Soluzione di ODE
 
 In questo laboratorio ci vogliamo occupare di alcuni metodi per la
 soluzione di una **equazione differenziale del primo ordine**, la cui forma
 generale è
+
 ```{math}
 y' = f(x,y)
 ```
+
 dove $y' = {\rm d}y/{\rm d}x$ e $f(x,y)$ è una funzione data. Come avete
 visto nei corsi di Analisi, la soluzione di questo tipo di equazioni
 contiene una costante arbitraria (detta *costante di integrazione*). Per
 trovare questa costante, e dunque determinare completamente una soluzione,
 dobbiamo sapere un punto sulla curva della soluzione:
+
 ```{math}
 y(a) = \alpha.
 ```
@@ -40,31 +43,37 @@ Nel problema ai valori iniziali, detto anche di Cauchy, all’equazione
 ```{math}
 y^{(p)}=f(x,y,y',y'',\ldots,y^{(p-1)}),
 ```
+
 si assegnano $p$ condizioni iniziali
+
 ```{math}
  y(x_0)=\eta_0,\quad y'(x_0)=\eta_1,\quad\ldots\quad,y^{(p-1)}(x_0)=\eta_{p-1}.
 ```
+
  Sotto **opportune condizioni**, si dimostrano l’esistenza e l’unicità
  della soluzione. In particolare, nel caso $p=1$
+
 ```{math}
     \left\{\begin{array}{l}
     y'=f(x,y)\quad\\y(x_0)=\eta
     \end{array}
     \right.
 ```
+
  valgono risultati di esistenza e unicità della soluzione nell’ipotesi
  che $f(x,y)$ sia continua rispetto a $x$ e *uniformemente
  lipschitziana* rispetto a $y$.
-
 
 ## Metodi numerici
 
 Determinare la soluzione di un’equazione
 differenziale per via analitica è generalmente difficile e spesso
 impossibile. Per esempio, l’equazione
+
 ```{math}
 y'=x^2+y^2,
 ```
+
 nonostante l’aspetto apparentemente semplice, non è risolubile in
 termini di funzioni elementari. Dobbiamo quindi cercare una soluzione
 approssimata usando un metodo numerico.
@@ -73,42 +82,51 @@ La letteratura che tratta i metodi numerici per equazioni
 differenziali con condizioni iniziali è molto vasta. Come primi
 esempi abbiamo visto
 
--  il metodo di Eulero esplicito,
--  il metodi di Eulero implicito,
--  il metodo di Crank-Nicolson.
+- il metodo di Eulero esplicito,
+- il metodi di Eulero implicito,
+- il metodo di Crank-Nicolson.
 
 ### Il metodo di Eulero esplicito
 
 Consideriamo il problema di Cauchy
+
 ```{math}
   \left\{\begin{array}{l}
   y'=f(x,y)\\y(a)=\eta
   \end{array}
   \right.
 ```
+
 che vogliamo risolvere numericamente nell’intervallo $[a,b]$.
 Discretizziamo la variabile $x$ fissando, nell’intervallo
 $[a,b]$, una **griglia di nodi** $\{x_n\}_{n=0,\ldots,N}$
 **equidistanti** di passo $h>0$:
+
 ```{math}
  x_0=a,\quad x_n=x_{n-1}+h,\quad x_N=b.
 ```
+
 Il comportamento della soluzione
 $y(x)$ tra $x_{n}$ e $x_{n+1}$ può essere stimato come
+
 ```{math}
  y(x_{n+1})\sim y(x_{n})+hf(x_{n},y(x_{n})).
 ```
+
 Per cui si
 approssima la funzione $y(x)$ per mezzo dei suoi valori
 $y_{n}$ nei nodi $x_{n}$, calcolati tramite la formula
+
 ```{math}
 y_0=\eta,\quad y_{n+1}=y_{n}+hf(x_{n},y_{n}),\quad n=0,\ldots,N-1.
 ```
+
 Abbiamo ora tutti gli strumenti necessari ad implementare il metodo di
 Eulero esplicito.
 :::{admonition} Esercizio
 Si usi il seguente prototipo per implementare il **metodo di Eulero
 esplicito** per un'equazione differenziali del primo ordine.
+
 ```matlab
 function [y,x] = expliciteuler(f,y0,a,b,h)
 %%EXPLICITEULER implementa il metodo di Eulero esplicito per la soluzione
@@ -127,16 +145,20 @@ end
 - Si minimizzi il numero di chiamate alla funzione $f$.
 
 Per testare il codice si può usare il seguente **problema di test**
+
 ```{math}
   \left\{\begin{array}{l}
   y'=-\frac{2y+x^2y^2}{x}\\
   y(1)=1
   \end{array}\right.
 ```
+
 per $x\in [1,2]$. In questo caso la **soluzione esatta** è nota e vale
+
 ```{math}
 y=\frac{1}{x^2(\log x+1)}.
 ```
+
 ```matlab
 %% Il metodo di Eulero esplicito
 f = @(x,y) - (2*y + (x^2)*(y^2))/(x);
@@ -157,12 +179,14 @@ semilogy(x,abs(y-ytrue(x)),'r-','LineWidth',2);
 xlabel('x');
 ylabel('Errore Assoluto');
 ```
+
 :::
 
 Possiamo studiare la convergenza del metodo guardando all'errore rispetto
 alla soluzione esatta e sfruttando la *function* `convergenza2` che
 abbiamo visto quando abbiamo discusso del metodo di Newton ({ref}`newt-convergenza`)
 per stimare numericamente l'ordine di convergenza:
+
 ```matlab
 function q = convergenza2(x)
 %%CONVERGENZA produce una stima dell'ordine di convergenza della
@@ -173,7 +197,9 @@ function q = convergenza2(x)
     end
 end
 ```
+
 Con questa osserviamo che:
+
 ```matlab
 %% Convergenza
 k = 9;
@@ -197,19 +223,24 @@ q = convergenza2(err);
 
 Errore del metodo di Eulero in avanti.
 ```
+
 ed il valore di $q = [0.9784, 0.9972, 1.0000, 1.0001, 1.0000, 1.0000]$ ed
 il previsto ordine di convergenza per questo metodo.
 
 Infatti, se supponiamo che $f(x,y)$ abbia derivate continue rispetto a
 $x$ e $y$. In questo caso si ha $y(x)\in\mathcal{C}^2([a,b])$. Possiamo
 quindi applicare la formula di Taylor (con resto in forma di Lagrange):
+
 ```{math}
 y(x_{n+1})-y(x_{n})=hy'(x_{n})+\frac{h^2}{2}y''(\xi),\quad \xi\in (x_{n},x_{n+1})
 ```
+
 da cui si deduce
+
 ```{math}
 |\tau_{n+1}|=\frac{h}{2}|y''(\xi)|.
 ```
+
 Quindi in ogni intervallo $[x_{n},x_{n+1}]$ l’**errore locale** è
 approssimativamente lineare in $h$. Poiché $|y''(\xi)|$ è
 limitato in $[a,b]$, si ha che $\tau_{n+1}$ tende a zero con
@@ -217,9 +248,11 @@ $h$ e si scrive $\tau_{n+1}=\mathcal{O}(h)$.
 
 Posto $\tau=\max_{n=1,\ldots,N}|\tau_n|$, esiste una costante
 $M\neq 0$ per cui $\tau\leq Mh$, e quindi
+
 ```{math}
  \lim_{h\rightarrow 0}\tau=0,\qquad \tau=\mathcal{O}(h).
 ```
+
 Si dice allora che il metodo di Eulero è consistente di ordine 1.
 
 Si può dimostrare che, sotto le stesse ipotesi su $f$, anche
@@ -331,12 +364,14 @@ Per ridurre le richieste su $h$, introduciamo quindi i metodi impliciti.
 
 Nel metodo di *Eulero all'indietro*
 la funzione $y(x)$ viene approssimata tramite la formula
+
 ```{math}
 y_0=\eta,\quad y_{n+1}=y_{n}+hf(x_{n+1},y_{n+1}),\quad n=0,\ldots,N-1.
 ```
 
 :::{admonition} Esercizio
 Si implementi il metodo di Eulero implicito.
+
 ```matlab
 function [y,x] = impliciteuler(f,y0,a,b,h)
 %%IMPLICITEULER implementa il metodo di Eulero implicito per la soluzione
@@ -351,16 +386,18 @@ function [y,x] = impliciteuler(f,y0,a,b,h)
 
 end
 ```
+
 - Si usi il comando `fsolve` per risolvere il sistema (possibilmente) non
 lineare.
 Si usi l'approssimazione al passo precedente come dato iniziale per il metodo.
 Per sopprimere le stampe di controllo di `fsolve` si possono
 usare le opzioni generate con `optimoptions('fsolve','Display','none')`.
 
-Si implementi una function `impliciteulernewton` con gli stessi input ed output della funzione precedente ma che utilizza il metodo di Newton per la risoluzione del sistema non lineare risultante dall'approssimazione con Eulero implicito. 
+Si implementi una function `impliciteulernewton` con gli stessi input ed output della funzione precedente ma che utilizza il metodo di Newton per la risoluzione del sistema non lineare risultante dall'approssimazione con Eulero implicito.
 Si usi l'approssimazione al passo precedente come dato iniziale per il metodo di Newton.
 
 Per verificare l'implementazione possiamo usare lo stesso problema test
+
 ```matlab
 %% Il metodo di Eulero implicito
 f = @(x,y) - (2*y + (x^2)*(y^2))/(x);
@@ -381,6 +418,7 @@ semilogy(x,abs(y-ytrue(x)),'r-','LineWidth',2);
 xlabel('x');
 ylabel('Errore Assoluto');
 ```
+
 :::
 
 <!--
@@ -417,22 +455,26 @@ Differenza in stabilità tra il metodo di Eulero implicito ed esplicito.
 ```
 -->
 
-
 ## Esercizi
 
 :::{admonition} Equazione differenziale $\leadsto$ sistema di ordine 1
 :class: tip
 Data
  un’equazione differenziale di ordine $p$
+
 ```{math}
 y^{(p)}=f(x,y,y',y'',\ldots,y^{(p-1)}),
 ```
+
  poniamo
+
 ```{math}
 y_1(x)=y(x),\quad y_2(x)=y'(x),\quad\ldots\quad y_p(x)=y^{(p-1)}(x).
 ```
+
  Allora l’equazione si trasforma in un sistema di equazioni del primo
  ordine
+
 ```{math}
     \left\{\begin{array}{l}
     y_1'=y_2\\
@@ -442,9 +484,11 @@ y_1(x)=y(x),\quad y_2(x)=y'(x),\quad\ldots\quad y_p(x)=y^{(p-1)}(x).
     y_p'=f(x,y_1,y_2,\ldots,y_p)
     \end{array}\right.
 ```
+
 :::
 
 :::{margin} Condizione iniziale
+
 ```{figure} ./images/spacecraft.png
 :name: fig:spacecraft
 
@@ -458,7 +502,9 @@ il moto dell'oggetto in coordinate polari sono
 ```{math}
 \ddot{r} = r \dot{\theta}^2 - \frac{G M_e}{r^2}, \quad \ddot{\theta} = - 2 \frac{\dot{r}\dot{\theta}}{r}.
 ```
+
 Rispetto alle costanti
+
 - $G = 6.672 \times 10^{-11}$ $\text{m}^3\text{kg}^{-1}\text{s}^{-2}$ per la costante di gravitazione universale,
 - $M_e = 5.9742 \times 10^{24} \text{ kg}$, per la massa della terra,
 - $R_e = 6378.14 \text{ km}$ per il raggio della terra a livello del mare,
@@ -472,6 +518,7 @@ Si determini il valore di $\theta$ del sito di impatto.
 
 Si può usare il seguente prototipo per implementare la dinamica. In questa
 implementazione assumiamo di aver ordinato le variabili $\mathbf{y}$ del sistema riscritto al primo ordine come $\mathbf{y} = [y_1,y_2,y_3,y_4]^T = [r,\dot{r},\theta,\dot{\theta}]^T$.
+
 ```matlab
 function ydot = veicolo(x,y)
 %VEICOLO Dinamica per il veicolo in coordinate polari.
@@ -481,6 +528,7 @@ function ydot = veicolo(x,y)
 
 end
 ```
+
 :::
 
 :::::
@@ -490,9 +538,11 @@ end
 Un paracadutista di massa $m$ in caduta libera verticale subisce una
 resistenza aerodinamica $F_D = c_D \dot{y}^2$, dove $y$ è misurata
 verso il basso dall'inizio della caduta. L'equazione differenziale che descrive la caduta è
+
 ```{math}
 \ddot{y} = g - \frac{c_D}{m} \dot{y}^2.
 ```
+
 Si determnini il tempo di una caduta di $500 \text{ m}$ utilizzando
 $g = 9.80665 \text{ m/}\text{s}^2$, $c_D = 0.2028 \text{ kg/m}$ e
 $m = 80 \,\text{kg}$.
